@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>متجر زرزور | Zarzour Store</title>
+  <meta name="description" content="متجر زرزور - وجهتك الأولى للحصول على أفضل البرامج، الكورسات، والمنتجات الرقمية والتقنية.">
+
+  <style>
+    :root{
+      --bg: #0f1320;
+      --surface: #151a2c;
+      --text: #e8ecf1;
+      --muted: #9aa6b2;
+      --primary: #4f8cff;
+      --accent: #22c55e;
+      --border: #23304a;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{
+      height: 100%;
+      background: radial-gradient(1200px 600px at 80% -100%, #16213e 0%, #0f1320 50%, #0b0f1a 100%);
+      color: var(--text);
+      font-family: "Tajawal", system-ui, -apple-system, Segoe UI, Roboto, "Noto Naskh Arabic", sans-serif;
+      margin: 0;
+    }
+
+    /* إطار التطبيق */
+    .app{
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* شريط علوي */
+    .app-bar{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(21,26,44,.75), rgba(21,26,44,.35));
+      border-bottom: 1px solid var(--border);
+    }
+    .app-bar-inner{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .brand-badge{
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, #4f8cff, #7c3aed);
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(79,140,255,.35);
+      font-size: 18px;
+    }
+    .actions{
+      margin-inline-start: auto;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .icon-btn{
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border: 1px solid var(--border);
+      background: rgba(15,19,32,.45);
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .1s ease, background .2s ease, border-color .2s ease;
+    }
+    .icon-btn:hover{ transform: translateY(-1px); background: rgba(21,26,44,.75); border-color: #2c3b5a; }
+
+    /* محتوى */
+    .content{
+      padding: 16px;
+    }
+    .panel{
+      display: none;
+      background: linear-gradient(180deg, rgba(21,26,44,.65), rgba(21,26,44,.4));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel.active{ display: block; }
+
+    .panel-header{
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,19,32,.35);
+    }
+    .panel-title{
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .panel-body{
+      padding: 16px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* شبكة بطاقات بسيطة */
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .card{
+      border: 1px solid var(--border);
+      background: rgba(12,16,28,.5);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column; /* تعديل بسيط لترتيب النص */
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* شريط تبويبات سفلي */
+    .tabbar{
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(0deg, rgba(21,26,44,.9), rgba(21,26,44,.55));
+      border-top: 1px solid var(--border);
+    }
+    .tabs{
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      padding: 8px;
+    }
+    .tab{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 6px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      border-radius: 12px;
+      transition: background .2s ease, color .2s ease, transform .08s ease;
+    }
+    .tab:hover{ background: rgba(31,38,61,.5); transform: translateY(-1px); }
+    .tab.active{
+      color: var(--text);
+      background: rgba(31,38,61,.7);
+      outline: 1px solid #2c3b5a;
+    }
+    .tab .icon{
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      font-size: 20px;
+    }
+    .tab .label{
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+
+    /* تجاوب */
+    @media (min-width: 560px){
+      .grid{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 360px){
+      .tab .label{ display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="app-bar">
+      <div class="app-bar-inner">
+        <div class="brand">
+          <div class="brand-badge" aria-hidden="true">🛍️</div>
+          <div>متجر زرزور</div> </div>
+        <div class="actions">
+          <button class="icon-btn" title="بحث" aria-label="بحث">🔎</button>
+          <button class="icon-btn" title="إشعارات" aria-label="إشعارات">🔔</button>
+          <button class="icon-btn" title="سمة" aria-label="سمة" id="themeToggle">🌗</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <section class="panel active" id="panel-home" role="region" aria-labelledby="tab-home">
+        <div class="panel-header">
+          <div class="icon" aria-hidden="true">🏠</div>
+          <div class="panel-title">الرئيسية</div>
+        </div>
+        <div class="panel-body">
+          أحدث المنتجات والكورسات المتاحة في متجر زرزور:
+          <div class="grid" style="margin-top:12px;">
+            <div class="card">
+              <div style="font-size:24px;">💻</div>
+              <div>لابتوب Pro</div>
+              <div style="color:var(--accent); font-size:13px;">$999</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🐍</div>
+              <div>كورس Python</div>
+              <div style="color:var(--accent); font-size:13px;">$25</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🎨</div>
+              <div>برنامج Photoshop</div>
+              <div style="color:var(--accent); font-size:13px;">$20/شهر</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">📱</div>
+              <div>iPhone 15</div>
+              <div style="color:var(--accent); font-size:13px;">$1100</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🛡️</div>
+              <div>مكافح فيروسات</div>
+              <div style="color:var(--accent); font-size:13px;">$15</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🎧</div>
+              <div>سماعة بلوتوث</div>
+              <div style="color:var(--accent); font-size:13px;">$45</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🌐</div>
+              <div>دورة الويب الكاملة</div>
+              <div style="color:var(--accent); font-size:13px;">$50</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🎮</div>
+              <div>يد تحكم PS5</div>
+              <div style="color:var(--accent); font-size:13px;">$70</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🎬</div>
+              <div>قالب مونتاج جاهز</div>
+              <div style="color:var(--accent); font-size:13px;">$10</div>
+            </div>
+            <div class="card">
+              <div style="font-size:24px;">🔋</div>
+              <div>بنك طاقة 20k</div>
+              <div style="color:var(--accent); font-size:13px;">$30</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-cats" role="region" aria-labelledby="tab-cats">
+        <div class="panel-header">
+          <div class="icon" aria-hidden="true">🗂️</div>
+          <div class="panel-title">التصنيفات</div>
+        </div>
+        <div class="panel-body">
+          أنشئ قائمة تصنيفاتك هنا. يمكن تحويلها لقائمة جانبية أو بطاقات.
+          <div class="grid" style="margin-top:12px;">
+            <div class="card">إلكترونيات</div>
+            <div class="card">ملابس</div>
+            <div class="card">منزل ومطبخ</div>
+            <div class="card">ألعاب</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-cart" role="region" aria-labelledby="tab-cart">
+        <div class="panel-header">
+          <div class="icon" aria-hidden="true">🛒</div>
+          <div class="panel-title">السلة</div>
+        </div>
+        <div class="panel-body">
+          السلة فارغة حالياً. أضف عناصر وشاهد الإجمالي والخصومات هنا.
+        </div>
+      </section>
+
+      <section class="panel" id="panel-fav" role="region" aria-labelledby="tab-fav">
+        <div class="panel-header">
+          <div class="icon" aria-hidden="true">❤️</div>
+          <div class="panel-title">المفضلة</div>
+        </div>
+        <div class="panel-body">
+          احفظ منتجاتك المفضلة للرجوع إليها بسرعة.
+          <div class="grid" style="margin-top:12px;">
+            <div class="card">منتج مفضل 1</div>
+            <div class="card">منتج مفضل 2</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-profile" role="region" aria-labelledby="tab-profile">
+        <div class="panel-header">
+          <div class="icon" aria-hidden="true">👤</div>
+          <div class="panel-title">الملف الشخصي</div>
+        </div>
+        <div class="panel-body">
+          اعرض معلومات المستخدم، الطلبات السابقة، وعناوين التوصيل هنا.
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="tabbar" role="tablist" aria-label="التنقل في أقسام المتجر">
+      <div class="tabs">
+        <button class="tab active" id="tab-home" role="tab" aria-controls="panel-home" data-target="panel-home">
+          <div class="icon" aria-hidden="true">🏠</div>
+          <div class="label">الرئيسية</div>
+        </button>
+        <button class="tab" id="tab-cats" role="tab" aria-controls="panel-cats" data-target="panel-cats">
+          <div class="icon" aria-hidden="true">🗂️</div>
+          <div class="label">التصنيفات</div>
+        </button>
+        <button class="tab" id="tab-cart" role="tab" aria-controls="panel-cart" data-target="panel-cart">
+          <div class="icon" aria-hidden="true">🛒</div>
+          <div class="label">السلة</div>
+        </button>
+        <button class="tab" id="tab-fav" role="tab" aria-controls="panel-fav" data-target="panel-fav">
+          <div class="icon" aria-hidden="true">❤️</div>
+          <div class="label">المفضلة</div>
+        </button>
+        <button class="tab" id="tab-profile" role="tab" aria-controls="panel-profile" data-target="panel-profile">
+          <div class="icon" aria-hidden="true">👤</div>
+          <div class="label">حسابي</div>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+
+  <script>
+    // تبديل التبويبات
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.getAttribute('data-target');
+
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(targetId)?.classList.add('active');
+      });
+    });
+
+    // تبديل السمة البسيط (داكن/أفتح)
+    const themeBtn = document.getElementById('themeToggle');
+    let light = false;
+    themeBtn.addEventListener('click', () => {
+      light = !light;
+      document.body.style.background =
+        light
+          ? 'radial-gradient(1200px 600px at 80% -100%, #f6f9ff 0%, #eaf0ff 50%, #dde7ff 100%)'
+          : 'radial-gradient(1200px 600px at 80% -100%, #16213e 0%, #0f1320 50%, #0b0f1a 100%)';
+      document.documentElement.style.setProperty('--surface', light ? '#ffffff' : '#151a2c');
+      document.documentElement.style.setProperty('--text', light ? '#0b1220' : '#e8ecf1');
+      document.documentElement.style.setProperty('--muted', light ? '#4b5563' : '#9aa6b2');
+      document.documentElement.style.setProperty('--border', light ? '#e6e8ee' : '#23304a');
+    });
+  </script>
+</body>
+</html>
